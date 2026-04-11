@@ -9,20 +9,26 @@ import (
 func main() {
 	r := gin.Default()
 
-	// Book routes
+	// 🔐 LOGIN (открытый)
+	r.POST("/login", handlers.Login)
+
+	// 📖 ОТКРЫТЫЕ ROUTES (можно оставить)
 	r.GET("/books", handlers.GetBooks)
-	r.POST("/books", handlers.CreateBook)
 	r.GET("/books/:id", handlers.GetBook)
-	r.PUT("/books/:id", handlers.UpdateBook)
-	r.DELETE("/books/:id", handlers.DeleteBook)
 
-	// Author routes
 	r.GET("/authors", handlers.GetAuthors)
-	r.POST("/authors", handlers.CreateAuthor)
-
-	// Category routes
 	r.GET("/categories", handlers.GetCategories)
-	r.POST("/categories", handlers.CreateCategory)
+
+	// 🔒 ЗАЩИЩЕННЫЕ ROUTES
+	auth := r.Group("/")
+	auth.Use(handlers.AuthMiddleware())
+
+	auth.POST("/books", handlers.CreateBook)
+	auth.PUT("/books/:id", handlers.UpdateBook)
+	auth.DELETE("/books/:id", handlers.DeleteBook)
+
+	auth.POST("/authors", handlers.CreateAuthor)
+	auth.POST("/categories", handlers.CreateCategory)
 
 	r.Run(":8080")
 }

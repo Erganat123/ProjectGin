@@ -1,10 +1,9 @@
 package handlers
 
 import (
+	"bookstore-gin/models"
 	"net/http"
 	"strconv"
-
-	"bookstore-gin/models"
 
 	"github.com/gin-gonic/gin"
 )
