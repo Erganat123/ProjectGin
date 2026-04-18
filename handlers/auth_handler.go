@@ -38,7 +38,7 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"token": tokenString})
 }
 
-// 🛡️ MIDDLEWARE (вот сюда вставляешь)
+// 🛡️ MIDDLEWARE
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -48,11 +48,16 @@ func AuthMiddleware() gin.HandlerFunc {
 			return jwtKey, nil
 		})
 
+		// ✅ теперь err используется
 		if err != nil || !token.Valid {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
 		}
+
+		claims, _ := token.Claims.(jwt.MapClaims)
+
+		c.Set("username", claims["username"].(string))
 
 		c.Next()
 	}
