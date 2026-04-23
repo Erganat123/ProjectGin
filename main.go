@@ -7,19 +7,16 @@ import (
 )
 
 func main() {
-    // 1. Подключаемся к базе
     database.InitDB()
 
     r := gin.Default()
 
-    // Публичные маршруты
     r.POST("/login", handlers.Login)
     r.GET("/books", handlers.GetBooks)
     r.GET("/books/:id", handlers.GetBook)
     r.GET("/authors", handlers.GetAuthors)
     r.GET("/categories", handlers.GetCategories)
 
-    // Приватные маршруты
     auth := r.Group("/")
     auth.Use(handlers.AuthMiddleware())
     {

@@ -14,7 +14,6 @@ var user = map[string]string{
 
 var jwtKey = []byte("secret")
 
-// 🔐 LOGIN
 func Login(c *gin.Context) {
 	var creds map[string]string
 
@@ -38,7 +37,6 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"token": tokenString})
 }
 
-// 🛡️ MIDDLEWARE
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -48,7 +46,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			return jwtKey, nil
 		})
 
-		// ✅ теперь err используется
 		if err != nil || !token.Valid {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
